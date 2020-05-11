@@ -18,11 +18,11 @@ function sanitize($string = '', $is_filename = FALSE)
 
 
 $sessionParam = null;
-if(get_magic_quotes_gpc()){
-  $sessionParam = stripslashes($_POST['sessionJSON']);
-}else{
+//if(get_magic_quotes_gpc()){
+//  $sessionParam = stripslashes($_POST['sessionJSON']);
+//}else{
   $sessionParam = $_POST['sessionJSON'];
-}
+//}
 $session = json_decode($sessionParam);
 
 
@@ -71,8 +71,10 @@ array_push($mushraCsvData, $input);
 }
 		
 if ($write_mushra) {
-	$filename = $filepathPrefix."mushra".$filepathPostfix;
+	$datestamp = date("Ymd\THis");
+	$filename = $filepathPrefix."mushra".$datestamp.$filepathPostfix;
 	$isFile = is_file($filename);
+	chmod($filepathPrefix,0666);
 	$fp = fopen($filename, 'a');
 	foreach ($mushraCsvData as $row) {
 		if ($isFile) {	    	
@@ -82,6 +84,7 @@ if ($write_mushra) {
 		}
 	}
 	fclose($fp);
+	chmod($filepathPrefix,0644);
 }
 
 // paired comparison
